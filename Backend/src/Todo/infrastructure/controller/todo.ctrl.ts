@@ -26,4 +26,38 @@ export class TodoController {
             return this.httpResponse.internalServerError(res, err)
         }
     } 
+
+    public getById = async (req: Request, res: Response) => {
+        try { 
+            const { uuid } = req.params;
+            const task = await this.todoUseCase.getTodoById(uuid);
+            if(!task) return this.httpResponse.notFound(res, "Task not found")
+            return this.httpResponse.ok(res, task)
+        }catch(err) {
+            return this.httpResponse.internalServerError(res, err)
+        }
+    }
+    
+    public updateCtrl = async (req: Request, res: Response) => {
+        try {
+            const { uuid } = req.params;
+            const  data = req.body;
+            const task = await this.todoUseCase.updateTodo(uuid, data);
+            if(!task) return this.httpResponse.notFound(res, "Task not found")
+            return this.httpResponse.ok(res, "Todo updated successfully")
+        }catch(err) {
+            return this.httpResponse.internalServerError(res, err)
+        }
+    }
+
+    public deleteCtrl = async (req: Request, res: Response) => {
+        try {
+            const { uuid } = req.params;
+            const task = await this.todoUseCase.deleteTodo(uuid);
+            if(!task) return this.httpResponse.notFound(res, "Task not found")
+            return this.httpResponse.ok(res, "Todo deleted successfully")
+        }catch(err) {
+            return this.httpResponse.internalServerError(res, err)
+        }
+    }
 }
